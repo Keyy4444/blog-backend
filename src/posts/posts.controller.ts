@@ -16,7 +16,15 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get()
-  getAllPosts(@Query('page') page: number, @Query('limit') limit: number) {
+  getAllPosts() {
+    return this.postsService.getAllPosts();
+  }
+
+  @Get('/pagination')
+  getPaginatedPosts(
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
     return this.postsService.getPaginatedPosts(page, limit);
   }
 
