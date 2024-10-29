@@ -52,6 +52,15 @@ export class PostsService {
   }
 
   async updatePost(id: string, updatePostDto: UpdatePostDto): Promise<Post> {
+    const slug = slugify(updatePostDto.title); // Generate slug from title
+    if (updatePostDto.title) {
+      const existingPostWithSlug = await this.postModel.findOne({ slug });
+      if (existingPostWithSlug && existingPostWithSlug._id.toString() !== id) {
+        throw new ConflictException(
+          `A post with the title "${updatePostDto.title}" already exists`,
+        );
+      }
+    }
     const existingPost = await this.postModel.findByIdAndUpdate(
       id,
       updatePostDto,
