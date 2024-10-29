@@ -31,7 +31,8 @@ export class PostsController {
   @ApiResponse({ status: 200, description: 'Returns an array of all posts' })
   getAllPosts(@Res() res: Response) {
     res.set('Cache-Control', 'no-store');
-    return this.postsService.getAllPosts();
+    const posts = this.postsService.getAllPosts();
+    return res.json(posts);
   }
 
   @Get('/pagination')
