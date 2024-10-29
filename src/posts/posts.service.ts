@@ -17,6 +17,12 @@ export class PostsService {
     return this.postModel.find().exec();
   }
 
+  async searchPostsByTitle(title: string): Promise<Post[]> {
+    return this.postModel
+      .find({ title: { $regex: title, $options: 'i' } })
+      .exec();
+  }
+
   async getPostBySlug(slug: string): Promise<Post> {
     const post = await this.postModel.findOne({ slug }).exec();
     if (!post) {

@@ -6,6 +6,7 @@ import {
   Param,
   Delete,
   Put,
+  Query,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto, UpdatePostDto } from './dto';
@@ -17,6 +18,11 @@ export class PostsController {
   @Get()
   getAllPosts() {
     return this.postsService.getAllPosts();
+  }
+
+  @Get('/search')
+  searchPostsByTitle(@Query('title') title: string) {
+    return this.postsService.searchPostsByTitle(title);
   }
 
   @Get('slug/:slug')
