@@ -17,10 +17,42 @@ export class PostsService {
     return this.postModel.find().exec();
   }
 
-  async searchPostsByTitle(title: string): Promise<Post[]> {
-    return this.postModel
-      .find({ title: { $regex: title, $options: 'i' } })
+  async getPaginatedPosts(
+    page = 1,
+    limit = 9,
+  ): Promise<{ posts: Post[]; totalPages: number }> {
+    const skip = (page - 1) * limit;
+    const posts = await this.postModel
+      .find()
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
       .exec();
+
+    const totalPosts = await this.postModel.countDocuments().exec();
+    const totalPages = Math.ceil(totalPosts / limit);
+    return { posts, totalPages };
+  }
+
+  async searchPostsByTitle(
+    title: string,
+    page = 1,
+    limit = 9,
+  ): Promise<{ posts: Post[]; totalPages: number }> {
+    const skip = (page - 1) * limit;
+    const posts = await this.postModel
+      .find({ title: { $regex: title, $options: 'i' } })
+      .sort({ createdAt: -1 })
+      .skip(skip)
+      .limit(limit)
+      .exec();
+
+    const totalPosts = await this.postModel
+      .countDocuments({ title: { $regex: title, $options: 'i' } })
+      .exec();
+    const totalPages = Math.ceil(totalPosts / limit);
+
+    return { posts, totalPages };
   }
 
   async getPostBySlug(slug: string): Promise<Post> {

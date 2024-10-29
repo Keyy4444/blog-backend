@@ -16,13 +16,17 @@ export class PostsController {
   constructor(private readonly postsService: PostsService) {}
 
   @Get()
-  getAllPosts() {
-    return this.postsService.getAllPosts();
+  getAllPosts(@Query('page') page: number, @Query('limit') limit: number) {
+    return this.postsService.getPaginatedPosts(page, limit);
   }
 
   @Get('/search')
-  searchPostsByTitle(@Query('title') title: string) {
-    return this.postsService.searchPostsByTitle(title);
+  searchPostsByTitle(
+    @Query('title') title: string,
+    @Query('page') page: number,
+    @Query('limit') limit: number,
+  ) {
+    return this.postsService.searchPostsByTitle(title, page, limit);
   }
 
   @Get('slug/:slug')
