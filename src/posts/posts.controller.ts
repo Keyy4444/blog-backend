@@ -29,10 +29,8 @@ export class PostsController {
   @Get()
   @ApiOperation({ summary: 'Get all posts' })
   @ApiResponse({ status: 200, description: 'Returns an array of all posts' })
-  getAllPosts(@Res() res: Response) {
-    res.set('Cache-Control', 'no-store');
-    const posts = this.postsService.getAllPosts();
-    return res.json(posts);
+  getAllPosts() {
+    return this.postsService.getAllPosts();
   }
 
   @Get('/pagination')
@@ -50,9 +48,7 @@ export class PostsController {
   getPaginatedPosts(
     @Query('page') page: number,
     @Query('limit') limit: number,
-    @Res() res: Response,
   ) {
-    res.set('Cache-Control', 'no-store'); // Prevent caching
     return this.postsService.getPaginatedPosts(page, limit);
   }
 
