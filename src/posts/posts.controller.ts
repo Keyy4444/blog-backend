@@ -20,11 +20,22 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 import { Response } from 'express';
+import axios from 'axios';
 
 @ApiTags('Posts')
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
+
+  private async triggerRevalidation() {
+    try {
+      await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/revalidate`, {
+        tags: ['posts'],
+      });
+    } catch (error) {
+      console.error('Error triggering revalidation:', error);
+    }
+  }
 
   @Get()
   @ApiOperation({ summary: 'Get all posts' })
@@ -94,8 +105,10 @@ export class PostsController {
   @ApiOperation({ summary: 'Create a new post' })
   @ApiBody({ type: CreatePostDto })
   @ApiResponse({ status: 201, description: 'The post has been created' })
-  createPost(@Body() createPostDto: CreatePostDto) {
-    return this.postsService.createPost(createPostDto);
+  async createPost(@Body() createPostDto: CreatePostDto) {
+    const post = await this.postsService.createPost(createPostDto);
+    await this.triggerRevalidation();
+    return post;
   }
 
   @Put(':id')
@@ -103,15 +116,22 @@ export class PostsController {
   @ApiParam({ name: 'id', description: 'ID of the post' })
   @ApiBody({ type: UpdatePostDto })
   @ApiResponse({ status: 200, description: 'The post has been updated' })
-  updatePost(@Param('id') id: string, @Body() updatePostDto: UpdatePostDto) {
-    return this.postsService.updatePost(id, updatePostDto);
+  async updatePost(
+    @Param('id') id: string,
+    @Body() updatePostDto: UpdatePostDto,
+  ) {
+    const post = await this.postsService.updatePost(id, updatePostDto);
+    await this.triggerRevalidation();
+    return post;
   }
 
   @Delete(':id')
   @ApiOperation({ summary: 'Delete a post' })
   @ApiParam({ name: 'id', description: 'ID of the post' })
   @ApiResponse({ status: 200, description: 'The post has been deleted' })
-  deletePost(@Param('id') id: string) {
-    return this.postsService.deletePost(id);
+  async deletePost(@Param('id') id: string) {
+    const result = await this.postsService.deletePost(id);
+    await this.triggerRevalidation();
+    return result;
   }
 }
