@@ -93,6 +93,9 @@ export class PostsService {
         );
       }
     }
+
+    updatePostDto.slug = slug;
+
     const existingPost = await this.postModel.findByIdAndUpdate(
       id,
       updatePostDto,
