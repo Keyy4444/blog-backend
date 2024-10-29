@@ -7,6 +7,7 @@ import {
   Delete,
   Put,
   Query,
+  Res,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto, UpdatePostDto } from './dto';
@@ -18,6 +19,7 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
+import { Response } from 'express';
 
 @ApiTags('Posts')
 @Controller('posts')
@@ -27,7 +29,8 @@ export class PostsController {
   @Get()
   @ApiOperation({ summary: 'Get all posts' })
   @ApiResponse({ status: 200, description: 'Returns an array of all posts' })
-  getAllPosts() {
+  getAllPosts(@Res() res: Response) {
+    res.set('Cache-Control', 'no-store');
     return this.postsService.getAllPosts();
   }
 
@@ -46,7 +49,9 @@ export class PostsController {
   getPaginatedPosts(
     @Query('page') page: number,
     @Query('limit') limit: number,
+    @Res() res: Response,
   ) {
+    res.set('Cache-Control', 'no-store'); // Prevent caching
     return this.postsService.getPaginatedPosts(page, limit);
   }
 
