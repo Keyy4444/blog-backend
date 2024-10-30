@@ -7,7 +7,6 @@ import {
   Delete,
   Put,
   Query,
-  Res,
 } from '@nestjs/common';
 import { PostsService } from './posts.service';
 import { CreatePostDto, UpdatePostDto } from './dto';
@@ -19,23 +18,11 @@ import {
   ApiResponse,
   ApiTags,
 } from '@nestjs/swagger';
-import { Response } from 'express';
-// import axios from 'axios';
 
 @ApiTags('Posts')
 @Controller('posts')
 export class PostsController {
   constructor(private readonly postsService: PostsService) {}
-
-  // private async triggerRevalidation() {
-  //   try {
-  //     const response = await axios.post('http://localhost:3333/api/revalidate');
-  //     console.log('Revalidation response:', response.data);
-  //   } catch (error) {
-  //     console.error('Error triggering revalidation:', error);
-  //     // console.error('Error triggering revalidation:', error);
-  //   }
-  // }
 
   @Get()
   @ApiOperation({ summary: 'Get all posts' })

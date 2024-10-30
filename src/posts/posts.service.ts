@@ -7,7 +7,7 @@ import { InjectModel } from '@nestjs/mongoose';
 import { Model } from 'mongoose';
 import { Post } from './post.schema';
 import { CreatePostDto, UpdatePostDto } from './dto';
-import { slugify } from '../utils/slugify';
+import { slugify } from './utils/slugify';
 
 @Injectable()
 export class PostsService {
