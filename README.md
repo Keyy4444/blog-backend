@@ -25,7 +25,7 @@ $ npm run start:prod
 
 To look at Swagger API documention on the project you can checkout [production documentation]([https://docs.nestjs.com/deployment](https://blog-backend-rqvu.onrender.com/api/docs#/)) or spin up local documentation with /api/docs#/.
 
-## Stay in touch
+## To stay in touch
 
 - Author - Oleksii Prokopchenko
 - Email - oleksprokopchenko@gmail.com
